@@ -1,0 +1,6 @@
+libfyaml: 
+	rimossi gli inline
+	sudo ln -s /usr/local/lib/libfyaml-0.5.so.0.0.0 /usr/lib/libfyaml-0.5.so.0
+jansson:
+	rimossi gli inline in quello switch
+

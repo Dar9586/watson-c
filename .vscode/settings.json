@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.tcc": "c",
+        "list": "c",
+        "functional": "c",
+        "random": "c",
+        "limits": "c",
+        "bit": "c",
+        "system_error": "c",
+        "sstream": "c"
+    }
+}
