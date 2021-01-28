@@ -22,19 +22,13 @@ const struct Master dataMap[VAR_TYPE_COUNT]={
     {ArrayType ,encodeJsonArray ,encodeYamlArray ,encodeArray }
 };
 
-Int valInt(Data data) { return data->type == IntType ? data->val.i : 0; }
-Uint valUint(Data data) { return data->type == UintType ? data->val.u : 0; }
-Float valFloat(Data data) { return data->type == FloatType ? data->val.f : 0; }
-String valString(Data data) {
-  return data->type == StringType ? data->val.s : NULL;
-}
-Bool valBool(Data data) { return data->type == BoolType ? data->val.b : 0; }
-Object valObject(Data data) {
-  return data->type == ObjectType ? data->val.o : NULL;
-}
-Array valArray(Data data) {
-  return data->type == ArrayType ? data->val.a : NULL;
-}
+Int valInt(Data data) { return data->val.i; }
+Uint valUint(Data data) { return data->val.u; }
+Float valFloat(Data data) { return data->val.f; }
+String valString(Data data) {return data->val.s;}
+Bool valBool(Data data) { return data->val.b; }
+Object valObject(Data data) {return data->val.o;}
+Array valArray(Data data) {return data->val.a;}
 Value val(Data data) { return data->val; }
 
 Data newData(Value data, DataType type) {
@@ -109,6 +103,56 @@ void freeData(Data data) {
   if (t == ArrayType)
     freeArray(data->val.a);
   free(data);
+}
+
+Data shallowCopy(Data original){
+  Data copy=malloc(sizeof(struct vmData));
+  memcpy(copy,original,sizeof(struct vmData));
+  return copy;
+}
+
+#define deepCopyString(s) fromString(getStringData(s),getStringLength(s))
+
+static void deepCopyObjectIterator(String key,Data value,void*arg1,void*arg2){
+  Object o=arg1;
+  String s=deepCopyString(key);
+  Data d=deepCopy(value);
+  putObject(o,s,d);
+}
+static void deepCopArrayIterator(Data data,void*arg1,void*arg2){
+  Array a=arg1;
+  Data d=deepCopy(data);
+  putArray(a,d);
+}
+
+static void deepCopyArray(Data copy){
+  Array a=newArray();
+  iterateArray(copy->val.a,deepCopArrayIterator,a,NULL);
+  copy->val.a=a;
+}
+
+static void deepCopyObject(Data copy){
+  Object o=newObject();
+  iterateObject(copy->val.o,deepCopyObjectIterator,o,NULL);
+  copy->val.o=o;
+}
+
+Data deepCopy(Data original){
+  Data copy=shallowCopy(original);
+  switch(copy->type){
+    case StringType:
+      copy->val.s=deepCopyString(copy->val.s);
+      break;
+    case ObjectType:
+      deepCopyObject(copy);
+      break;
+    case ArrayType:
+      deepCopyArray(copy);
+      break;
+    default:
+      break;
+  }
+  return copy;
 }
 
 void encodeWatson(VM vm, Data data) {

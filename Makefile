@@ -3,11 +3,11 @@ CWD=.
 OUT=$(CWD)/out
 SRC=$(CWD)/src
 LIB_FOLDER=$(CWD)/libs
-FLAGS= -g -Wall --ansi
+FLAGS= -g -Wall --ansi -Wextra -pedantic -Wno-long-long -Wno-unused-parameter
 LIBS=`pkg-config --cflags --libs jansson` `pkg-config --cflags --libs libfyaml`
 
 clean:
-	rm $(CWD)/watson-c
+	rm -f $(CWD)/watson-c
 	rm -rf $(OUT)
 
 $(OUT):

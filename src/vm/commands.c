@@ -73,7 +73,7 @@ void vmNnew(VM vm) { push(vm->stack, newDataNull()); }
 void vmGdup(VM vm) {
   Data d = pop(vm->stack);
   push(vm->stack, d);
-  push(vm->stack, d);
+  push(vm->stack, deepCopy(d));
 }
 void vmGpop(VM vm) { freeData(pop(vm->stack)); }
 void vmGswp(VM vm) {

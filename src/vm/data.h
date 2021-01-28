@@ -35,5 +35,6 @@ void encodeWatson(VM vm, Data data);
 
 DataType getDataType(Data data);
 void encodeWatson(VM vm, Data data);
+Data deepCopy(Data data);
 json_t *encodeJson(Data data);
 struct fy_node *encodeYaml(struct fy_document *doc, Data data);

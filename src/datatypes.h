@@ -1,8 +1,4 @@
-static const uint64_t nanVal = 0x7FF0000000000001LL;
-static const uint64_t infVal = 0x7FF0000000000000LL;
-#define itof(f) (*((double *)&(f)))
-#define INF itof(infVal)
-#define NAN itof(nanVal)
+
 
 typedef int64_t Int;
 typedef uint64_t Uint;
@@ -21,6 +17,12 @@ typedef union {
   Object o;
   Array a;
 } Value;
+
+static const Value nanVal = {0x7FF0000000000001LL};
+static const Value infVal = {0x7FF0000000000000LL};
+#define itof(x) x.f
+#define INF itof(infVal)
+#define NAN itof(nanVal)
 
 typedef enum { LexerA, LexerS } Lexer;
 typedef enum { Encode, Decode } ParseMethod;
