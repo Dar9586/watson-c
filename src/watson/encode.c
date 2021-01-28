@@ -20,14 +20,13 @@ void encodeInt(VM vm, Value value) {
 
 void encodeNull(VM vm, Value v) { writeCommand(vm, Nnew); }
 void encodeBool(VM vm, Value value) {
-  Bool b = value.b;
   writeCommand(vm, Bnew);
-  if (!b)
-    return;
+  if (!value.b)return;
   writeCommand(vm, Bneg);
 }
 void encodeUint(VM vm, Value val) {
   encodeInt(vm, val);
+  if(val.i >= 0)return;
   writeCommand(vm, Itou);
 }
 void encodeFloat(VM vm, Value val) {

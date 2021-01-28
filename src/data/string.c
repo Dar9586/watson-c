@@ -64,7 +64,7 @@ void freeString(String s) {
 
 void encodeString(VM vm, Value value) {
   String str = value.s;
-  int i;
+  size_t i;
   writeCommand(vm, Snew);
   for (i = 0; i < str->length; i++) {
     Value v;

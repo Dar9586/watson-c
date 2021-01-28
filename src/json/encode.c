@@ -30,8 +30,7 @@ json_t *encodeJsonInt(Data data) {
 
 json_t *encodeJsonUint(Data data) {
   Uint uval = valUint(data);
-  Int ival = (Int)uval;
-  return uval == ival ? json_integer(ival) : json_sprintf("%lu", uval);
+  return uval&SIGN_BIT ? json_sprintf("%lu", uval):json_integer(uval);
 }
 
 json_t *encodeJsonFloat(Data data) { 

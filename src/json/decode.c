@@ -48,7 +48,8 @@ Data parseJson(json_t *node) {
 }
 
 Data jsonExecute(json_t *root, json_error_t error) {
-  Data d = parseJson(root);
+  Data d;
+  d = parseJson(root);
   json_decref(root);
   return d;
 }

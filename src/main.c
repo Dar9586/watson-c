@@ -76,8 +76,9 @@ int main(int argc, char *argv[]) {
   struct args arg;
   json_t*root;
   struct fy_document*doc=fy_document_create(NULL);
+  Data d;
   parseArgument(&arg, argc, argv);
-  Data d=arg.buf?decodeMap[arg.input].parseString(arg.buf,arg.len):decodeMap[arg.input].parseStream(arg.inputFile);
+  d=arg.buf?decodeMap[arg.input].parseString(arg.buf,arg.len):decodeMap[arg.input].parseStream(arg.inputFile);
   switch(arg.output){
     case Watson:
       encodeWatson(newVM(LexerA),d);

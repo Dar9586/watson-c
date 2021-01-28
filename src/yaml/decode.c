@@ -86,12 +86,14 @@ Data parseYaml(struct fy_node *node) {
 }
 
 Data yamlExecute(struct fy_document *fyd) {
+  struct fy_node *root;
+  Data d;
   if (fyd == NULL)
     exit(8);
-  struct fy_node *root = fy_document_root(fyd);
+  root = fy_document_root(fyd);
   if (!regexInitialized)
     initRegex();
-  Data d = parseYaml(root);
+  d = parseYaml(root);
   fy_document_destroy(fyd);
   return d;
 }

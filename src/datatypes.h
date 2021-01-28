@@ -1,5 +1,5 @@
-static const long long nanVal = 0x7FF0000000000001LL;
-static const long long infVal = 0x7FF0000000000000LL;
+static const uint64_t nanVal = 0x7FF0000000000001LL;
+static const uint64_t infVal = 0x7FF0000000000000LL;
 #define itof(f) (*((double *)&(f)))
 #define INF itof(infVal)
 #define NAN itof(nanVal)
@@ -69,3 +69,4 @@ typedef enum {
 #define FLOAT_PRECISION_JSON 3
 #define VM_TRUE 1
 #define VM_FALSE 0
+#define SIGN_BIT 0x8000000000000000L

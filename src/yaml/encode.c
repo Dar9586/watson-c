@@ -12,32 +12,27 @@ struct fy_node *encodeYamlString(struct fy_document *node, Data data) {
   String s = valString(data);
   return fy_node_create_scalar(node, getStringData(s), getStringLength(s));
 }
-struct fy_node *encodeYamlInt(struct fy_document *node, Data data) {
-  char val[30], *dup;
-  size_t len;
-  sprintf(val, "%ld", valInt(data));
-  len = strlen(val);
-  dup = malloc(sizeof(char) * len);
-  memcpy(dup, val, len);
-  return fy_node_create_scalar(node, dup, len);
-}
-struct fy_node *encodeYamlUint(struct fy_document *node, Data data) {
-  char val[30], *dup;
-  size_t len;
-  sprintf(val, "%lu", valUint(data));
-  len = strlen(val);
-  dup = malloc(sizeof(char) * len);
-  memcpy(dup, val, len);
-  return fy_node_create_scalar(node, dup, len);
-}
-struct fy_node *encodeYamlFloat(struct fy_document *node, Data data) {
+
+static struct fy_node *encodeYamlNum(struct fy_document *node, const char *format, Value v) {
   char val[100], *dup;
   size_t len;
-  sprintf(val, "%lf", valFloat(data));
+  sprintf(val, format, v);
   len = strlen(val);
   dup = malloc(sizeof(char) * len);
   memcpy(dup, val, len);
   return fy_node_create_scalar(node, dup, len);
+}
+
+struct fy_node *encodeYamlInt(struct fy_document *node, Data data) {
+  return encodeYamlNum(node,"%ld",val(data));
+}
+
+struct fy_node *encodeYamlUint(struct fy_document *node, Data data) {
+  return encodeYamlNum(node,"%lu",val(data));
+}
+
+struct fy_node *encodeYamlFloat(struct fy_document *node, Data data) {
+  return encodeYamlNum(node,"%lf",val(data));
 }
 
 static void arrayAdder(Data data, void *arg1, void *arg2) {

@@ -1,6 +1,6 @@
 #ifndef WATSON_LIBS
 #define WATSON_LIBS
-
+/*to disable the inline of libfyaml and jansson*/
 #define inline 
 #include<stdio.h>
 #include<stdlib.h>
