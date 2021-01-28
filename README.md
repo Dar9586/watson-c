@@ -1,6 +1,6 @@
 # watson-c
 
-A C implementation of the esoteric configuration language Watson[WATSON](https://github.com/genkami/watson)
+A C implementation of the esoteric configuration language [WATSON](https://github.com/genkami/watson)
 
 ## Prerequisites
 
