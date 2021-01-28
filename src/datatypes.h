@@ -4,7 +4,7 @@ typedef int64_t Int;
 typedef uint64_t Uint;
 typedef double Float;
 typedef struct string *String;
-typedef uint8_t Bool;
+typedef bool Bool;
 typedef struct object *Object;
 typedef struct array *Array;
 

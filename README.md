@@ -11,7 +11,9 @@ This version of the app needs [gcc](https://gcc.gnu.org/), [pkg-config](https://
 Build the watson-c executable with the below command.
 
 ```sh
-make build
+autoreconfig -vfi
+./configure
+make
 ```
 
 ## Usage

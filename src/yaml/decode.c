@@ -2,7 +2,7 @@
 
 Data parseYaml(struct fy_node *node);
 static regex_t floatRegex, intRegex, uintRegex;
-static int8_t regexInitialized = 0;
+static char regexInitialized = 0;
 void initRegex() {
   regcomp(&floatRegex, "^-?(0|[1-9][0-9]*)(\\.[0-9]*)?([eE][-+]?[0-9]+)?$",
           REG_NOSUB | REG_EXTENDED);

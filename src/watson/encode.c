@@ -2,7 +2,7 @@
 
 void encodeInt(VM vm, Value value) {
   Uint val = value.u;
-  int8_t siz = 63;
+  char siz = 63;
   writeCommand(vm, Inew);
   if (val == 0)
     return;

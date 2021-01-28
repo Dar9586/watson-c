@@ -6,6 +6,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<stdint.h>
+#include<stdbool.h>
 #include<regex.h>
 #include<jansson.h>
 #include<libfyaml.h>
