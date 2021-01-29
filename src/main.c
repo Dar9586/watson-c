@@ -22,7 +22,7 @@ struct args {
 };
 
 void printHelp(char *argv[]) {
-    printf("usage: %s --from TYPE --to TYPE -src SOURCE --dest DESTINATION", argv[0]);
+    printf("usage: %s --from TYPE --to TYPE -src SOURCE --dest DESTINATION\n", argv[0]);
     puts("--from -f [watson|json|yaml] indicate the source format");
     puts("--to   -t [watson|json|yaml] indicate the destination format");
     puts("--src  -s [file|string]      indicate the source");
