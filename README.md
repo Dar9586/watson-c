@@ -11,7 +11,9 @@ This version of the app needs [cmake](https://cmake.org/)
 Build the watson-c executable with the below command.
 
 ```sh
-cmake .
+mkdir build
+cd build
+cmake ..
 make
 ```
 
