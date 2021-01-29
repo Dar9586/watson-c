@@ -17,7 +17,7 @@ make
 
 ## Usage
 
-```sh
+```text
 usage: ./watsonC --from TYPE --to TYPE -src SOURCE --dest DESTINATION
 
 --from -f [watson|json|yaml] indicate the source format

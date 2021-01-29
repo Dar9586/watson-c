@@ -1,5 +1,6 @@
-./out/*
-./.vscode/*
-./watson-c
-./test/*
+/out/*
+/.vscode/*
+/watson-c
+/test/*
 *.o
+/cmake-build-debug/

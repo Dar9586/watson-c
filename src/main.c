@@ -30,7 +30,6 @@ void printHelp(char *argv[]) {
     puts("--help -h                    show this help message");
     puts("By default the values are --from json --to watson -src stdin --dest stdout");
     puts("All parameter are optional");
-    puts("The src and dest string are null terminated, so \\0 can't be used");
 }
 
 IOFormat stringToFormat(char *str) {
@@ -91,7 +90,7 @@ void parseArgument(struct args *args, int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     struct args a;
     parseArgument(&a, argc, argv);
-    if (a.input.format == File) {
+    if (a.input.destType == File) {
         watson_write_from_file_to_file(a.input.format, a.output.format, a.input.dest.file, a.output.dest.file);
     } else {
         watson_write_from_buffer_to_file(a.input.format, a.output.format, a.input.dest.buffer.buf,
