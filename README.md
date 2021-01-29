@@ -17,16 +17,13 @@ make
 
 ## Usage
 
-The following command convert from WATSON to `JSON/Yaml`, if neither a file nor a string is passed, stdin will be used
-
 ```sh
-./watson-c decode -t [json|yaml] <file|string>
-```
+usage: ./watsonC --from TYPE --to TYPE -src SOURCE --dest DESTINATION
 
-The following command convert from `JSON/Yaml` to WATSON , if neither a file nor a string is passed, stdin will be used
-
-```sh
-./watson-c encode -t [json|yaml] <file|string>
+--from -f [watson|json|yaml] indicate the source format
+--to   -t [watson|json|yaml] indicate the destination format
+--src  -s [file|string]      indicate the source
+--dest -d file               indicate the destination (will be overwritten)
 ```
 
 ## Libraries
