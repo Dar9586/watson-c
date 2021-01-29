@@ -4,15 +4,14 @@ A C implementation of the esoteric configuration language [WATSON](https://githu
 
 ## Prerequisites
 
-This version of the app needs [gcc](https://gcc.gnu.org/), [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/), [libfyaml v0.5.7](https://github.com/pantoniou/libfyaml) and [Jansson v2.14](https://github.com/akheron/jansson) to be installed
+This version of the app needs [cmake](https://cmake.org/)
 
 ## Building
 
 Build the watson-c executable with the below command.
 
 ```sh
-autoreconf -vfi
-./configure
+cmake .
 make
 ```
 
@@ -29,6 +28,13 @@ The following command convert from `JSON/Yaml` to WATSON , if neither a file nor
 ```sh
 ./watson-c encode -t [json|yaml] <file|string>
 ```
+
+## Libraries
+
+This app uses the following libraries:
+
+- [libfyaml v0.5.7](https://github.com/pantoniou/libfyaml)
+- [Jansson v2.14](https://github.com/akheron/jansson)
 
 ## License
 
