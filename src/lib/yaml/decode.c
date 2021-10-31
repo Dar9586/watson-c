@@ -99,8 +99,9 @@ Data yamlExecute(struct fy_document *fyd) {
     if (fyd == NULL)
         exit(8);
     root = fy_document_root(fyd);
-    if (!regexInitialized) {}
-    initRegex();
+    if (!regexInitialized) {
+        initRegex();
+    }
     d = parseYaml(root);
     fy_document_destroy(fyd);
     return d;

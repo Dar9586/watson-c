@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <getopt.h>
 
 #include "lib/libwatson.h"
 
@@ -21,16 +23,23 @@ struct args {
     struct destination input, output;
 };
 
-void printHelp(char *argv[]) {
-    printf("usage: %s --from TYPE --to TYPE -src SOURCE --dest DESTINATION\n", argv[0]);
-    puts("--from -f [watson|json|yaml] indicate the source format");
-    puts("--to   -t [watson|json|yaml] indicate the destination format");
-    puts("--src  -s [file|string]      indicate the source");
-    puts("--dest -d file               indicate the destination (will be overwritten)");
-    puts("--help -h                    show this help message");
-    puts("By default the values are --from json --to watson -src stdin --dest stdout");
-    puts("All parameter are optional");
-}
+void init_args(struct args *args);
+IOFormat stringToFormat(char *str);
+void applyInput(char *str, struct destination *dest);
+void applyOutput(char *str, struct destination *dest);
+void applyDestination(char *str, struct destination *dest, int isOutput);
+void printHelp(char *argv[]);
+void parse_args(struct args *args, int argc, char **argv);
+void init_args(struct args *args);
+
+static const struct option longopts[] = {
+        {.name = "from", .has_arg = required_argument, .val = 'f'},   /*Install webcam driver or pulseaudio*/
+        {.name = "to", .has_arg = required_argument, .val = 't'}, /*Uninstall webcam driver or pulseaudio*/
+        {.name = "src", .has_arg = required_argument, .val = 's'},
+        {.name = "dest", .has_arg = required_argument, .val = 'd'},
+        {.name = "help", .has_arg = no_argument, .val = 'h'},
+        {},
+};
 
 IOFormat stringToFormat(char *str) {
     if (strcmp(str, "watson") == 0)return Watson;
@@ -40,23 +49,80 @@ IOFormat stringToFormat(char *str) {
     exit(1);
 }
 
-void applyDestination(char *str, struct destination *dest, int isOutput) {
-    FILE *f = fopen(str, isOutput ? "w" : "r");
+void applyInput(char *str, struct destination *dest) {
+    FILE *f = fopen(str, "r");
     if (f) {
         dest->destType = File;
         dest->dest.file = f;
-    } else if (!isOutput) {
+    } else {
         dest->destType = Buffer;
         dest->dest.buffer.buf = str;
         dest->dest.buffer.len = strlen(str);
-    } else {
-        fputs("Unable to open the destination file\n", stderr);
-        exit(1);
     }
 }
 
-void parseArgument(struct args *args, int argc, char *argv[]) {
-    int i;
+void applyOutput(char *str, struct destination *dest) {
+    FILE *f = fopen(str, "w");
+    if (f == NULL) {
+        fputs("Unable to open the destination file\n", stderr);
+        exit(1);
+    }
+    dest->destType = File;
+    dest->dest.file = f;
+}
+
+void applyDestination(char *str, struct destination *dest, int isOutput) {
+    if (strcmp("-", str) == 0) { //stdin/stdout is already default
+        return;
+    }
+    if (isOutput)applyOutput(str, dest);
+    else applyInput(str, dest);
+}
+
+void printHelp(char *argv[]) {
+    printf("usage: %s --from TYPE --to TYPE -src SOURCE --dest DESTINATION\n", argv[0]);
+    puts("--from    [watson|json|yaml] indicate the source format                      (default json)");
+    puts("--to      [watson|json|yaml] indicate the destination format                 (default watson)");
+    puts("--src     [file|string]      indicate the source                             (default stdin)");
+    puts("--dest    file               indicate the destination (will be overwritten)  (default stdout)");
+    puts("--help -h                    show this help message");
+    puts("By default the values are --from json --to watson -src stdin --dest stdout");
+    puts("All parameter are optional");
+}
+
+void parse_args(struct args *args, int argc, char **argv) {
+
+    int opt;
+
+    init_args(args);
+
+    for (;;) {
+        opt = getopt_long(argc, argv, "h", longopts, NULL);
+        if (opt == -1)
+            return;
+        switch (opt) {
+            case 'f':
+                args->input.format = stringToFormat(optarg);
+                break;
+            case 't':
+                args->output.format = stringToFormat(optarg);
+                break;
+            case 's':
+                applyDestination(optarg, &args->input, false);
+                break;
+            case 'd':
+                applyDestination(optarg, &args->output, true);
+                break;
+            case 'h':
+                printHelp(argv);
+                exit(0);
+            default:
+                exit(1);
+        }
+    }
+}
+
+void init_args(struct args *args) {
     args->input.dest.file = stdin;
     args->input.format = Json;
     args->input.destType = File;
@@ -64,32 +130,11 @@ void parseArgument(struct args *args, int argc, char *argv[]) {
     args->output.dest.file = stdout;
     args->output.format = Watson;
     args->output.destType = File;
-
-    if (argc == 1 || strcmp("--help", argv[1]) == 0 || strcmp("--h", argv[1]) == 0) {
-        printHelp(argv);
-        exit(0);
-    }
-
-    for (i = 1; i < argc - 1; i++) {
-        if (argv[i][0] != '-')continue;
-        if (strcmp("--from", argv[i]) == 0 || strcmp("-f", argv[i]) == 0) {
-            args->input.format = stringToFormat(argv[++i]);
-        }
-        if (strcmp("--to", argv[i]) == 0 || strcmp("-t", argv[i]) == 0) {
-            args->output.format = stringToFormat(argv[++i]);
-        }
-        if (strcmp("--src", argv[i]) == 0 || strcmp("-s", argv[i]) == 0) {
-            applyDestination(argv[++i], &args->input, 0);
-        }
-        if (strcmp("--dest", argv[i]) == 0 || strcmp("-d", argv[i]) == 0) {
-            applyDestination(argv[++i], &args->input, 1);
-        }
-    }
 }
 
 int main(int argc, char *argv[]) {
     struct args a;
-    parseArgument(&a, argc, argv);
+    parse_args(&a, argc, argv);
     if (a.input.destType == File) {
         watson_write_from_file_to_file(a.input.format, a.output.format, a.input.dest.file, a.output.dest.file);
     } else {
