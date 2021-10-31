@@ -10,8 +10,8 @@ typedef enum {
 #define LIB_WATSON_PARSE_ERROR (-2)
 
 /*
- * Those functions return -1 on error and 0 on success
- * */
+ * Those functions return negative values on errors and 0 on success
+*/
 int watson_write_from_buffer_to_buffer(IOFormat input, IOFormat output, char *source, size_t source_size, char *dest,
                                        size_t dest_size);
 

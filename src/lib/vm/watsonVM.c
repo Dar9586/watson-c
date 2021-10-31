@@ -1,6 +1,6 @@
 #include "../libs.h"
 
-#define switchMode(vm) vm->lexer = (vm->lexer == LexerA ? LexerS : LexerA)
+#define switchMode(vm) (vm->lexer = (vm->lexer == LexerA ? LexerS : LexerA))
 
 struct command {
     CommandCode commandName;

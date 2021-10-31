@@ -18,8 +18,8 @@ typedef union {
     Array a;
 } Value;
 
-static const Value nanVal = {0x7FF0000000000001LL};
-static const Value infVal = {0x7FF0000000000000LL};
+static const Value nanVal = {.u=0x7FF0000000000001LL};
+static const Value infVal = {.u=0x7FF0000000000000LL};
 #define itof(x) x.f
 #define INF itof(infVal)
 #define NAN itof(nanVal)
@@ -79,9 +79,7 @@ typedef enum {
 } DataType;
 
 
-#define MAX_LONG_SIZE 20
 #define LEXER_COUNT 2
-#define PARSE_METHOD_COUNT 2
 #define COMMAND_COUNT 23
 #define IO_FORMAT_COUNT 3
 #define VAR_TYPE_COUNT 8

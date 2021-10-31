@@ -44,7 +44,7 @@ void freeArray(Array a) {
     free(a);
 }
 
-void iterateArray(Array a, void (*foreach)(Data data, void *, void *),
+void iterateArray(Array a, void (*foreach)(Data, void *, void *),
                   void *arg1, void *arg2) {
     struct element *el = a->head;
     VM vm = arg1;
