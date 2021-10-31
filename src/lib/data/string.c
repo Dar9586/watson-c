@@ -44,7 +44,8 @@ void growString(String s) {
     s->capacity = calculateNewSize(s->capacity);
     s->data = realloc(s->data, sizeof(char) * s->capacity);
     if (s->data == NULL) {
-        fprintf(stderr, "Unable to grow string\n");
+        fprintf(stderr, "Unable to grow string, exiting the program\n");
+        // Not enough memory to encode the data, exiting is OK
         exit(1);
     }
 }

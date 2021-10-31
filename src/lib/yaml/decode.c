@@ -107,8 +107,6 @@ Data parseYaml(struct fy_node *node) {
 Data yamlExecute(struct fy_document *fyd) {
     struct fy_node *root;
     Data d;
-    if (fyd == NULL)
-        exit(8);
     root = fy_document_root(fyd);
     if (!regexInitialized) {
         initRegex();
@@ -120,10 +118,12 @@ Data yamlExecute(struct fy_document *fyd) {
 
 Data parseYamlFromStream(FILE *fp) {
     struct fy_document *fyd = fy_document_build_from_fp(NULL, fp);
+    if (fyd == NULL)return NULL;
     return yamlExecute(fyd);
 }
 
 Data parseYamlFromString(const char *str, size_t len) {
     struct fy_document *fyd = fy_document_build_from_string(NULL, str, len);
+    if (fyd == NULL)return NULL;
     return yamlExecute(fyd);
 }

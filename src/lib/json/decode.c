@@ -57,11 +57,13 @@ Data jsonExecute(json_t *root, json_error_t error) {
 Data parseJsonFromStream(FILE *fp) {
     json_error_t error;
     json_t *var = json_loadf(fp, JSON_ALLOW_NUL | JSON_DECODE_ANY, &error);
+    if (var == NULL)return NULL;
     return jsonExecute(var, error);
 }
 
 Data parseJsonFromString(const char *str, size_t len) {
     json_error_t error;
     json_t *var = json_loadb(str, len, JSON_ALLOW_NUL | JSON_DECODE_ANY, &error);
+    if (var == NULL)return NULL;
     return jsonExecute(var, error);
 }
