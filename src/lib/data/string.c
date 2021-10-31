@@ -70,7 +70,7 @@ int encodeString(VM vm, Value value) {
     for (i = 0; i < str->length; i++) {
         Value v;
         v.i = str->data[i];
-        encodeInt(vm, v);
+        if (encodeInt(vm, v))return -1;
         if (writeCommand(vm, Sadd))return -1;
     }
     return 0;

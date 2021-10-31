@@ -152,7 +152,7 @@ static int deepCopyObjectIterator(String key, Data value, void *arg1, void *arg2
     return 0;
 }
 
-static int deepCopArrayIterator(Data data, void *arg1, void *arg2) {
+static int deepCopyArrayIterator(Data data, void *arg1, void *arg2) {
     Array a = arg1;
     Data d = deepCopy(data);
     putArray(a, d);
@@ -161,7 +161,7 @@ static int deepCopArrayIterator(Data data, void *arg1, void *arg2) {
 
 static void deepCopyArray(Data copy) {
     Array a = newArray();
-    iterateArray(copy->val.a, deepCopArrayIterator, a, NULL);
+    iterateArray(copy->val.a, deepCopyArrayIterator, a, NULL);
     copy->val.a = a;
 }
 

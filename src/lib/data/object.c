@@ -51,8 +51,8 @@ int encodeObjectIterate(String key, Data value, void *arg1, void *arg2) {
     VM vm = arg1;
     Value v;
     v.s = key;
-    encodeString(vm, v);
-    encodeWatson(vm, value);
+    if (encodeString(vm, v))return -1;
+    if (encodeWatson(vm, value))return -1;
     if (writeCommand(vm, Oadd))return -1;
     return 0;
 }
@@ -60,8 +60,7 @@ int encodeObjectIterate(String key, Data value, void *arg1, void *arg2) {
 int encodeObject(VM vm, Value val) {
     Object a = val.o;
     if (writeCommand(vm, Onew))return -1;
-    iterateObject(a, encodeObjectIterate, vm, NULL);
-    return 0;
+    return iterateObject(a, encodeObjectIterate, vm, NULL);
 }
 
 int iterateObject(Object a, int (*foreach)(String, Data, void *, void *),

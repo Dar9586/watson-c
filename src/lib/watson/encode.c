@@ -19,7 +19,7 @@ int encodeInt(VM vm, Value value) {
     return 0;
 }
 
-int encodeNull(VM vm, Value v) { if (writeCommand(vm, Nnew))return -1; }
+int encodeNull(VM vm, Value v) { return writeCommand(vm, Nnew); }
 
 int encodeBool(VM vm, Value value) {
     if (writeCommand(vm, Bnew))return -1;
@@ -29,14 +29,14 @@ int encodeBool(VM vm, Value value) {
 }
 
 int encodeUint(VM vm, Value val) {
-    encodeInt(vm, val);
+    if (encodeInt(vm, val))return -1;
     if (val.i >= 0)return 0;
     if (writeCommand(vm, Itou))return -1;
     return 0;
 }
 
 int encodeFloat(VM vm, Value val) {
-    encodeInt(vm, val);
+    if (encodeInt(vm, val))return -1;
     if (writeCommand(vm, Itof))return -1;
     return 0;
 }

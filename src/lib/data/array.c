@@ -56,7 +56,7 @@ int iterateArray(Array a, int (*foreach)(Data data, void *, void *),
 
 int encodeArrayIterate(Data data, void *arg1, void *arg2) {
     VM vm = arg1;
-    encodeWatson(vm, data);
+    if (encodeWatson(vm, data))return -1;
     if (writeCommand(vm, Aadd))return -1;
     return 0;
 }
@@ -64,6 +64,5 @@ int encodeArrayIterate(Data data, void *arg1, void *arg2) {
 int encodeArray(VM vm, Value val) {
     Array a = val.a;
     if (writeCommand(vm, Anew))return -1;
-    if (iterateArray(a, encodeArrayIterate, vm, NULL))return -1;
-    return 0;
+    return iterateArray(a, encodeArrayIterate, vm, NULL);
 }
