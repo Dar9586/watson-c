@@ -28,6 +28,12 @@ Data processObject(struct fy_node *node) {
     while ((pair = fy_node_mapping_iterate(node, &iter))) {
         key = parseYaml(fy_node_pair_key(pair));
         val = parseYaml(fy_node_pair_value(pair));
+        if (key == NULL || val == NULL || getDataType(key) != StringType) {
+            if (key != NULL)deepFreeData(key);
+            if (val != NULL)deepFreeData(val);
+            freeObject(o);
+            return NULL;
+        }
         putObject(o, valString(key), val);
         shallowFreeData(key);
     }
@@ -40,7 +46,12 @@ Data processArray(struct fy_node *node) {
     struct fy_node *seqNode;
     void *iter = NULL;
     while ((seqNode = fy_node_sequence_iterate(node, &iter))) {
-        putArray(a, parseYaml(seqNode));
+        Data to_append = parseYaml(seqNode);
+        if (to_append == NULL) {
+            freeArray(a);
+            return NULL;
+        }
+        putArray(a, to_append);
     }
     return newDataArray(a);
 }
@@ -58,14 +69,14 @@ Data processScalar(struct fy_node *node) {
     Value v;
     Data data = NULL;
     const char *ori = fy_node_get_scalar(node, &len);
-
-    if (strncmp(ori, "null", len) == 0)
-        return newDataNull();
-    if (strncmp(ori, "true", len) == 0)
-        return newDataBool(VM_TRUE);
-    if (strncmp(ori, "false", len) == 0)
-        return newDataBool(VM_FALSE);
-
+    if (len >= 4) {
+        if (strncmp(ori, "null", len) == 0)
+            return newDataNull();
+        if (strncmp(ori, "true", len) == 0)
+            return newDataBool(VM_TRUE);
+        if (strncmp(ori, "false", len) == 0)
+            return newDataBool(VM_FALSE);
+    }
     str = dupString(ori, len);
     if (regexec(&uintRegex, str, 0, NULL, 0) == 0) {
         v.u = strtoul(str, NULL, 10);

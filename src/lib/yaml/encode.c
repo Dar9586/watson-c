@@ -17,7 +17,7 @@ struct fy_node *encodeYamlString(struct fy_document *node, Data data) {
 
 static struct fy_node *encodeYamlNum(struct fy_document *node, const char *format, Value v) {
     char val[100];
-    sprintf(val, format, v);
+    snprintf(val, sizeof(val), format, v);
     return fy_node_create_scalar_copy(node, val, -1);
 }
 
