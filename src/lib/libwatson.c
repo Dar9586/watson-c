@@ -17,36 +17,36 @@ const struct {
 
 int watson_write_from_buffer_to_buffer(IOFormat input, IOFormat output, char *source, size_t source_size, char *dest,
                                        size_t dest_size) {
-    if (source == NULL || dest == NULL)return -1;
+    if (source == NULL || dest == NULL)return LIB_WATSON_INVALID_PARAMS;
     Data d = decodeMap[input].parseString(source, source_size);
-    if (d == NULL)return -2;
+    if (d == NULL)return LIB_WATSON_PARSE_ERROR;
     int k = decodeMap[output].writeToBuffer(d, dest, dest_size);
     deepFreeData(d);
     return k;
 }
 
 int watson_write_from_buffer_to_file(IOFormat input, IOFormat output, char *source, size_t source_size, FILE *dest) {
-    if (source == NULL || dest == NULL)return -1;
+    if (source == NULL || dest == NULL)return LIB_WATSON_INVALID_PARAMS;
     Data d = decodeMap[input].parseString(source, source_size);
-    if (d == NULL)return -2;
+    if (d == NULL)return LIB_WATSON_PARSE_ERROR;
     int k = decodeMap[output].writeToStream(d, dest);
     deepFreeData(d);
     return k;
 }
 
 int watson_write_from_file_to_buffer(IOFormat input, IOFormat output, FILE *source, char *dest, size_t dest_size) {
-    if (source == NULL || dest == NULL)return -1;
+    if (source == NULL || dest == NULL)return LIB_WATSON_INVALID_PARAMS;
     Data d = decodeMap[input].parseStream(source);
-    if (d == NULL)return -2;
+    if (d == NULL)return LIB_WATSON_PARSE_ERROR;
     int k = decodeMap[output].writeToBuffer(d, dest, dest_size);
     deepFreeData(d);
     return k;
 }
 
 int watson_write_from_file_to_file(IOFormat input, IOFormat output, FILE *source, FILE *dest) {
-    if (source == NULL || dest == NULL)return -1;
+    if (source == NULL || dest == NULL)return LIB_WATSON_INVALID_PARAMS;
     Data d = decodeMap[input].parseStream(source);
-    if (d == NULL)return -2;
+    if (d == NULL)return LIB_WATSON_PARSE_ERROR;
     int k = decodeMap[output].writeToStream(d, dest);
     deepFreeData(d);
     return k;

@@ -39,6 +39,7 @@ VM newVM(Lexer lexer) {
     VM v = malloc(sizeof(struct vm));
     v->lexer = lexer;
     v->stack = newStack();
+    v->error_code = 0;
     return v;
 }
 
@@ -79,12 +80,13 @@ void freeVM(VM vm) {
     free(vm);
 }
 
-int writeCommand(VM vm, CommandCode com) {
+void writeCommand(VM vm, CommandCode com) {
+    if (vm->error_code)return;
     char c = commands[com].commandChar[vm->lexer];
     switch (vm->destType) {
         case Buffer:
             if (vm->dest.buffer.used == vm->dest.buffer.max)
-                return -1;
+                vm->error_code = LIB_WATSON_BUFFER_FILLED;
             vm->dest.buffer.buf[vm->dest.buffer.used++] = c;
             break;
         case File:
@@ -93,5 +95,4 @@ int writeCommand(VM vm, CommandCode com) {
     }
     if (com == Snew)
         switchMode(vm);
-    return 0;
 }

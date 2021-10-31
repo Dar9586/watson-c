@@ -44,25 +44,26 @@ void freeArray(Array a) {
     free(a);
 }
 
-int iterateArray(Array a, int (*foreach)(Data data, void *, void *),
-                 void *arg1, void *arg2) {
+void iterateArray(Array a, void (*foreach)(Data data, void *, void *),
+                  void *arg1, void *arg2) {
     struct element *el = a->head;
+    VM vm = arg1;
     while (el) {
-        if (foreach(el->data, arg1, arg2))return -1;
+        if (vm->error_code)return;
+        foreach(el->data, arg1, arg2);
         el = el->next;
     }
-    return 0;
 }
 
-int encodeArrayIterate(Data data, void *arg1, void *arg2) {
+void encodeArrayIterate(Data data, void *arg1, void *arg2) {
     VM vm = arg1;
-    if (encodeWatson(vm, data))return -1;
-    if (writeCommand(vm, Aadd))return -1;
-    return 0;
+    encodeWatson(vm, data);
+    writeCommand(vm, Aadd);
 }
 
-int encodeArray(VM vm, Value val) {
+void encodeArray(VM vm, Value val) {
     Array a = val.a;
-    if (writeCommand(vm, Anew))return -1;
-    return iterateArray(a, encodeArrayIterate, vm, NULL);
+    if (vm->error_code)return;
+    writeCommand(vm, Anew);
+    iterateArray(a, encodeArrayIterate, vm, NULL);
 }

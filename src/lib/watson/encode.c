@@ -1,48 +1,50 @@
 #include "../libs.h"
 
-int encodeInt(VM vm, Value value) {
+void encodeInt(VM vm, Value value) {
     Uint val = value.u;
     char siz = 63;
-    if (writeCommand(vm, Inew))return -1;
+    if (vm->error_code)return;
+    writeCommand(vm, Inew);
     if (val == 0)
-        return 0;
+        return;
     while ((val & (1UL << siz)) == 0)
         siz--;
-    if (writeCommand(vm, Iinc))return -1;
+    writeCommand(vm, Iinc);
     siz--;
     while (siz >= 0) {
-        if (writeCommand(vm, Ishl))return -1;
+        writeCommand(vm, Ishl);
         if (val & (1UL << siz))
-            if (writeCommand(vm, Iinc))return -1;
+            writeCommand(vm, Iinc);
         siz--;
     }
-    return 0;
 }
 
-int encodeNull(VM vm, Value v) { return writeCommand(vm, Nnew); }
+void encodeNull(VM vm, Value v) { writeCommand(vm, Nnew); }
 
-int encodeBool(VM vm, Value value) {
-    if (writeCommand(vm, Bnew))return -1;
-    if (!value.b)return 0;
-    if (writeCommand(vm, Bneg))return -1;
-    return 0;
+void encodeBool(VM vm, Value value) {
+    if (vm->error_code)return;
+    writeCommand(vm, Bnew);
+    if (!value.b)return;
+    writeCommand(vm, Bneg);
 }
 
-int encodeUint(VM vm, Value val) {
-    if (encodeInt(vm, val))return -1;
-    if (val.i >= 0)return 0;
-    if (writeCommand(vm, Itou))return -1;
-    return 0;
+void encodeUint(VM vm, Value val) {
+    if (vm->error_code)return;
+    encodeInt(vm, val);
+    if (val.i >= 0)return;
+    writeCommand(vm, Itou);
 }
 
-int encodeFloat(VM vm, Value val) {
-    if (encodeInt(vm, val))return -1;
-    if (writeCommand(vm, Itof))return -1;
-    return 0;
+void encodeFloat(VM vm, Value val) {
+    if (vm->error_code)return;
+    encodeInt(vm, val);
+    writeCommand(vm, Itof);
 }
 
 int executeWatson(VM vm, Data data) {
-    int ret = encodeWatson(vm, data);
+    int ret;
+    encodeWatson(vm, data);
+    ret = vm->error_code;
     freeVM(vm);
     return ret;
 }

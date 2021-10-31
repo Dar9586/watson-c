@@ -33,11 +33,10 @@ struct fy_node *encodeYamlFloat(struct fy_document *node, Data data) {
     return encodeYamlNum(node, "%lf", val(data));
 }
 
-static int arrayAdder(Data data, void *arg1, void *arg2) {
+static void arrayAdder(Data data, void *arg1, void *arg2) {
     struct fy_node *arr = arg1;
     struct fy_document *doc = arg2;
     fy_node_sequence_append(arr, encodeYaml(doc, data));
-    return 0;
 }
 
 struct fy_node *encodeYamlArray(struct fy_document *node, Data data) {
@@ -47,14 +46,13 @@ struct fy_node *encodeYamlArray(struct fy_document *node, Data data) {
     return arr;
 }
 
-static int objectAdder(String key, Data value, void *arg1, void *arg2) {
+static void objectAdder(String key, Data value, void *arg1, void *arg2) {
     struct fy_node *obj = arg1;
     struct fy_document *doc = arg2;
     Data str = newDataString(key);
     fy_node_mapping_append(obj, encodeYamlString(doc, str),
                            encodeYaml(doc, value));
     shallowFreeData(str);
-    return 0;
 }
 
 struct fy_node *encodeYamlObject(struct fy_document *node, Data data) {

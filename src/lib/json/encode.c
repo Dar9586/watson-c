@@ -1,16 +1,14 @@
 #include "../libs.h"
 
-static int arrayAdder(Data data, void *arg, void *arg2) {
+static void arrayAdder(Data data, void *arg, void *arg2) {
     json_t *arr = arg;
     json_array_append(arr, encodeJson(data));
-    return 0;
 }
 
-static int objectAdder(String key, Data value, void *arg, void *arg2) {
+static void objectAdder(String key, Data value, void *arg, void *arg2) {
     json_t *obj = arg;
     json_object_setn(obj, getStringData(key), getStringLength(key),
                      encodeJson(value));
-    return 0;
 }
 
 json_t *encodeJsonBool(Data data) {

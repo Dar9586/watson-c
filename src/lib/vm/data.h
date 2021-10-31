@@ -57,7 +57,7 @@ void printData(Data data);
 
 DataType getDataType(Data data);
 
-int encodeWatson(VM vm, Data data);
+void encodeWatson(VM vm, Data data);
 
 Data deepCopy(Data data);
 

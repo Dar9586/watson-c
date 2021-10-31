@@ -47,28 +47,29 @@ void freeObject(Object o) {
     free(o);
 }
 
-int encodeObjectIterate(String key, Data value, void *arg1, void *arg2) {
+void encodeObjectIterate(String key, Data value, void *arg1, void *arg2) {
     VM vm = arg1;
     Value v;
     v.s = key;
-    if (encodeString(vm, v))return -1;
-    if (encodeWatson(vm, value))return -1;
-    if (writeCommand(vm, Oadd))return -1;
-    return 0;
+    encodeString(vm, v);
+    encodeWatson(vm, value);
+    writeCommand(vm, Oadd);
 }
 
-int encodeObject(VM vm, Value val) {
+void encodeObject(VM vm, Value val) {
     Object a = val.o;
-    if (writeCommand(vm, Onew))return -1;
+    if (vm->error_code)return;
+    writeCommand(vm, Onew);
     return iterateObject(a, encodeObjectIterate, vm, NULL);
 }
 
-int iterateObject(Object a, int (*foreach)(String, Data, void *, void *),
-                  void *arg1, void *arg2) {
+void iterateObject(Object a, void (*foreach)(String, Data, void *, void *),
+                   void *arg1, void *arg2) {
     struct element *el = a->head;
+    VM vm = arg1;
     while (el) {
-        if (foreach(el->name, el->data, arg1, arg2))return -1;
+        if (vm->error_code)return;
+        foreach(el->name, el->data, arg1, arg2);
         el = el->next;
     }
-    return 0;
 }

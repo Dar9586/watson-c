@@ -5,6 +5,10 @@ typedef enum {
     Watson, Json, Yaml
 } IOFormat;
 
+#define LIB_WATSON_BUFFER_FILLED (-3)
+#define LIB_WATSON_INVALID_PARAMS (-1)
+#define LIB_WATSON_PARSE_ERROR (-2)
+
 /*
  * Those functions return -1 on error and 0 on success
  * */

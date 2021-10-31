@@ -13,7 +13,7 @@ struct Master {
 
     struct fy_node *(*encodeYaml)(struct fy_document *, Data);
 
-    int (*encodeWatson)(VM, Value);
+    void (*encodeWatson)(VM, Value);
 };
 
 const struct Master dataMap[VAR_TYPE_COUNT] = {
@@ -144,19 +144,17 @@ Data shallowCopy(Data original) {
 
 #define deepCopyString(s) fromString(getStringData(s),getStringLength(s))
 
-static int deepCopyObjectIterator(String key, Data value, void *arg1, void *arg2) {
+static void deepCopyObjectIterator(String key, Data value, void *arg1, void *arg2) {
     Object o = arg1;
     String s = deepCopyString(key);
     Data d = deepCopy(value);
     putObject(o, s, d);
-    return 0;
 }
 
-static int deepCopyArrayIterator(Data data, void *arg1, void *arg2) {
+static void deepCopyArrayIterator(Data data, void *arg1, void *arg2) {
     Array a = arg1;
     Data d = deepCopy(data);
     putArray(a, d);
-    return 0;
 }
 
 static void deepCopyArray(Data copy) {
@@ -189,8 +187,8 @@ Data deepCopy(Data original) {
     return copy;
 }
 
-int encodeWatson(VM vm, Data data) {
-    return dataMap[data->type].encodeWatson(vm, data->val);
+void encodeWatson(VM vm, Data data) {
+    dataMap[data->type].encodeWatson(vm, data->val);
 }
 
 json_t *encodeJson(Data data) { return dataMap[data->type].encodeJson(data); }

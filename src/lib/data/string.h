@@ -6,7 +6,7 @@ void putChar(String s, Int c);
 
 void freeString(String s);
 
-int encodeString(VM vm, Value value);
+void encodeString(VM vm, Value value);
 
 String fromCString(const char *buf);
 

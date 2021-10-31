@@ -6,7 +6,7 @@ void putArray(Array a, Data c);
 
 void freeArray(Array a);
 
-int encodeArray(VM vm, Value val);
+void encodeArray(VM vm, Value val);
 
-int iterateArray(Array a, int (*foreach)(Data data, void *, void *),
-                 void *arg1, void *arg2);
+void iterateArray(Array a, void (*foreach)(Data data, void *, void *),
+                  void *arg1, void *arg2);

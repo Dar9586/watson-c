@@ -1,14 +1,14 @@
 #include "../libs.h"
 
-int encodeInt(VM vm, Value value);
+void encodeInt(VM vm, Value value);
 
-int encodeNull(VM vm, Value v);
+void encodeNull(VM vm, Value v);
 
-int encodeBool(VM vm, Value value);
+void encodeBool(VM vm, Value value);
 
-int encodeUint(VM vm, Value val);
+void encodeUint(VM vm, Value val);
 
-int encodeFloat(VM vm, Value val);
+void encodeFloat(VM vm, Value val);
 
 int writeWatsonDataToStream(Data data, FILE *fp);
 

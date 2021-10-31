@@ -52,6 +52,7 @@ struct vm {
         File, Buffer
     } destType;
     union vmdest dest;
+    int error_code;
 };
 
 

@@ -63,15 +63,16 @@ void freeString(String s) {
     free(s);
 }
 
-int encodeString(VM vm, Value value) {
+void encodeString(VM vm, Value value) {
     String str = value.s;
     size_t i;
-    if (writeCommand(vm, Snew))return -1;
+    if (vm->error_code)return;
+    writeCommand(vm, Snew);
     for (i = 0; i < str->length; i++) {
+        if (vm->error_code)return;
         Value v;
         v.i = str->data[i];
-        if (encodeInt(vm, v))return -1;
-        if (writeCommand(vm, Sadd))return -1;
+        encodeInt(vm, v);
+        writeCommand(vm, Sadd);
     }
-    return 0;
 }

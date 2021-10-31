@@ -6,7 +6,7 @@ VM newFileVM(Lexer lexer, FILE *fp);
 
 Data vmParse(VM vm, const char *str);
 
-int writeCommand(VM vm, CommandCode com);
+void writeCommand(VM vm, CommandCode com);
 
 void parseCommand(VM vm, char c);
 
